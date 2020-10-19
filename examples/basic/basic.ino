@@ -1,8 +1,7 @@
 #include <SPI.h>
 #include <WiFiNINA.h>
 
-
-#include "wifi_provisioning.h"
+#include "wifi_nina_provisioning.h"
 
 void setup() {
   Serial.begin(9600);
@@ -19,7 +18,7 @@ void setup() {
     Serial.println("Please upgrade the firmware");
   }
   
-  WifiProvisioning wp;
+  WifiNinaProvisioning wp;
 
   wp.begin(true);
 }

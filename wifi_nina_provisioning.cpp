@@ -1,20 +1,20 @@
-#include "wifi_provisioning.h"
+#include "wifi_nina_provisioning.h"
 
-WifiProvisioning::WifiProvisioning() {
+WifiNinaProvisioning::WifiNinaProvisioning() {
   ap_ssid = "arduino_ap";
   ap_pass = "12345678";
 
   init();
 }
 
-WifiProvisioning::WifiProvisioning(String _ap_ssid, String _ap_pass) {
+WifiNinaProvisioning::WifiNinaProvisioning(String _ap_ssid, String _ap_pass) {
   ap_ssid = _ap_ssid;
   ap_pass = _ap_pass;
 
   init();
 }
 
-void WifiProvisioning::init() {
+void WifiNinaProvisioning::init() {
   status = WL_IDLE_STATUS;
   server = new WiFiServer(80);
 
@@ -23,27 +23,27 @@ void WifiProvisioning::init() {
   }
 }
 
-String WifiProvisioning::get_ssid() {
+String WifiNinaProvisioning::get_ssid() {
   return ssid;
 }
 
-String WifiProvisioning::get_pass() {
+String WifiNinaProvisioning::get_pass() {
   return pass;
 }
 
-void WifiProvisioning::begin(bool connect) {
+void WifiNinaProvisioning::begin(bool connect) {
   scan_networks();
   Serial.println("");
   create_ap();
   Serial.println("");
   start_web_server();
   if (connect) {
-    Serial.println(""); 
+    Serial.println("");
     connect_to_network();
   }
 }
 
-void WifiProvisioning::scan_networks() {
+void WifiNinaProvisioning::scan_networks() {
   Serial.println("Scanning wifi networks...");
 
   int n_ssid = WiFi.scanNetworks();
@@ -59,7 +59,7 @@ void WifiProvisioning::scan_networks() {
   }
 }
 
-void WifiProvisioning::create_ap() {
+void WifiNinaProvisioning::create_ap() {
   Serial.println("Creating access point...");
   Serial.println("  SSID: " + ap_ssid);
   Serial.println("  PASS: " + ap_pass);
@@ -75,7 +75,7 @@ void WifiProvisioning::create_ap() {
   Serial.println("  Success.");
 }
 
-void WifiProvisioning::start_web_server() {
+void WifiNinaProvisioning::start_web_server() {
   bool brk = false;
 
   Serial.println("Starting Web Server...");
@@ -127,7 +127,7 @@ void WifiProvisioning::start_web_server() {
   }
 }
 
-void WifiProvisioning::print_html_networks(WiFiClient client) {
+void WifiNinaProvisioning::print_html_networks(WiFiClient client) {
   client.println("HTTP/1.1 200 OK");
   client.println("Content-type:text/html");
   client.println();
@@ -154,7 +154,7 @@ void WifiProvisioning::print_html_networks(WiFiClient client) {
   client.println();
 }
 
-void WifiProvisioning::print_html_connecting(WiFiClient client) {
+void WifiNinaProvisioning::print_html_connecting(WiFiClient client) {
   client.println("HTTP/1.1 200 OK");
   client.println("Content-type:text/html");
   client.println();
@@ -162,7 +162,7 @@ void WifiProvisioning::print_html_connecting(WiFiClient client) {
   client.println();
 }
 
-void WifiProvisioning::get_network_credetials(String request) {
+void WifiNinaProvisioning::get_network_credetials(String request) {
   // GET /connect?networks=pogui&password=pibedeoro HTTP/1.1
   // Get first line of request and trim
   String s = request.substring(0, request.indexOf("\n"));
@@ -185,7 +185,7 @@ void WifiProvisioning::get_network_credetials(String request) {
   pass = _pass;
 }
 
-void WifiProvisioning::connect_to_network() {
+void WifiNinaProvisioning::connect_to_network() {
   Serial.println("Connecting to selected network...");
 
   while (status != WL_CONNECTED) {
@@ -197,7 +197,7 @@ void WifiProvisioning::connect_to_network() {
   print_network_status();
 }
 
-void WifiProvisioning::print_ap_status() {
+void WifiNinaProvisioning::print_ap_status() {
   Serial.print("  SSID: ");
   Serial.println(WiFi.SSID());
 
@@ -207,7 +207,7 @@ void WifiProvisioning::print_ap_status() {
   Serial.println(" and choose the network you want to connect to.");
 }
 
-void WifiProvisioning::print_network_status() {
+void WifiNinaProvisioning::print_network_status() {
   Serial.print("  You're connected to ");
   Serial.println(WiFi.SSID());
 

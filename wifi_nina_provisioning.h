@@ -1,5 +1,5 @@
-#ifndef _WIFI_PROVISIONING_
-#define _WIFI_PROVISIONING_
+#ifndef _WIFI_NINA_PROVISIONING_
+#define _WIFI_NINA_PROVISIONING_
 
 #include <WiFiNINA.h>
 
@@ -7,7 +7,7 @@
 #define DELAY_AP_CREATION 10000
 #define DELAY_CONNECTION_ATTEMPTS 10000
 
-class WifiProvisioning {
+class WifiNinaProvisioning {
   private:
     String      ap_ssid;
     String      ap_pass;
@@ -18,8 +18,8 @@ class WifiProvisioning {
     String      networks[MAX_NETWORKS];
 
   public:
-    WifiProvisioning();
-    WifiProvisioning(String _ap_ssid, String _ap_pass);
+    WifiNinaProvisioning();
+    WifiNinaProvisioning(String _ap_ssid, String _ap_pass);
     void        begin(bool connect);
     String      get_ssid();
     String      get_pass();
@@ -30,7 +30,7 @@ class WifiProvisioning {
     void        create_ap();
     void        start_web_server();
     void        connect_to_network();
-  
+
     void        print_html_networks(WiFiClient client);
     void        print_html_connecting(WiFiClient client);
     void        get_network_credetials(String request);
