@@ -18,11 +18,13 @@ You can change both when instantiating the `WifiNinaProvisioning` object. The pa
 
 Starting the provisioning workflow only requires calling the `WifiNinaProvisioning::begin()` function.
 
-```
+```cpp
 #include "wifi_nina_provisioning.h"
 
 WifiNinaProvisioning wp("my_ssid", "my_password");
-wp.begin();
+wp.begin(true);
 ```
+
+If you do not want the workflow to connect to the selected network, use `wp.begin(false)` instead. Use the `get_ssid()` and `get_pass()` accessors to retrieve the selected SSID and password.
 
 See the _basic_ example sketch for a complete demo of the library.
