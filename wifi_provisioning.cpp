@@ -23,14 +23,24 @@ void WifiProvisioning::init() {
   }
 }
 
-void WifiProvisioning::begin() {
+String WifiProvisioning::get_ssid() {
+  return ssid;
+}
+
+String WifiProvisioning::get_pass() {
+  return pass;
+}
+
+void WifiProvisioning::begin(bool connect) {
   scan_networks();
   Serial.println("");
   create_ap();
   Serial.println("");
   start_web_server();
-  Serial.println("");
-  connect_to_network();
+  if (connect) {
+    Serial.println(""); 
+    connect_to_network();
+  }
 }
 
 void WifiProvisioning::scan_networks() {

@@ -20,7 +20,9 @@ class WifiProvisioning {
   public:
     WifiProvisioning();
     WifiProvisioning(String _ap_ssid, String _ap_pass);
-    void        begin();
+    void        begin(bool connect);
+    String      get_ssid();
+    String      get_pass();
 
   private:
     void        init();
