@@ -3,6 +3,9 @@
 
 #include <WiFiNINA.h>
 
+#define DEFAULT_SSID "arduino_ap"
+#define DEFAULT_PASS "12345678"
+#define DEFAULT_WEB_SERVER_PORT 80
 #define MAX_NETWORKS  20
 #define DELAY_AP_CREATION 10000
 #define DELAY_CONNECTION_ATTEMPTS 10000

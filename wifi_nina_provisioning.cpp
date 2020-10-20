@@ -1,8 +1,8 @@
 #include "wifi_nina_provisioning.h"
 
 WifiNinaProvisioning::WifiNinaProvisioning() {
-  ap_ssid = "arduino_ap";
-  ap_pass = "12345678";
+  ap_ssid = DEFAULT_SSID;
+  ap_pass = DEFAULT_PASS;
 
   init();
 }
@@ -16,7 +16,7 @@ WifiNinaProvisioning::WifiNinaProvisioning(String _ap_ssid, String _ap_pass) {
 
 void WifiNinaProvisioning::init() {
   status = WL_IDLE_STATUS;
-  server = new WiFiServer(80);
+  server = new WiFiServer(DEFAULT_WEB_SERVER_PORT);
 
   for (int i = 0; i < MAX_NETWORKS; i++) {
     networks[i] = "";
