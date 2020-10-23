@@ -3,12 +3,14 @@
 
 #include <WiFiNINA.h>
 
-#define DEFAULT_SSID "arduino_ap"
-#define DEFAULT_PASS "12345678"
-#define DEFAULT_WEB_SERVER_PORT 80
-#define MAX_NETWORKS  20
-#define DELAY_AP_CREATION 10000
+#define DEFAULT_SSID              "arduino_ap"
+#define DEFAULT_PASS              "12345678"
+#define DEFAULT_WEB_SERVER_PORT   80
+#define MAX_NETWORKS              20
+#define DELAY_AP_CREATION         10000
 #define DELAY_CONNECTION_ATTEMPTS 10000
+#define SSID_FILE                 "/fs/ssid"
+#define PASS_FILE                 "/fs/pass"
 
 class WifiNinaProvisioning {
   private:
@@ -26,6 +28,8 @@ class WifiNinaProvisioning {
     void        begin(bool connect);
     String      get_ssid();
     String      get_pass();
+    void        store_credentials();
+    void        retrieve_credentials();
 
   private:
     void        init();

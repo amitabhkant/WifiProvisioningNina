@@ -197,6 +197,51 @@ void WifiNinaProvisioning::connect_to_network() {
   print_network_status();
 }
 
+void WifiNinaProvisioning::store_credentials() {
+  WiFiStorageFile ssid_file = WiFiStorage.open(SSID_FILE);
+  WiFiStorageFile pass_file = WiFiStorage.open(PASS_FILE);
+  
+    
+  if (ssid_file) {
+    ssid_file.erase();
+  }
+
+  if (pass_file) {
+    pass_file.erase();
+  }
+
+  ssid_file.write(ssid.c_str(), ssid.length());
+  pass_file.write(pass.c_str(), pass.length());
+}
+
+void WifiNinaProvisioning::retrieve_credentials() {
+  WiFiStorageFile ssid_file = WiFiStorage.open(SSID_FILE);
+  WiFiStorageFile pass_file = WiFiStorage.open(PASS_FILE);
+  char ssid_buf[128];
+  char pass_buf[128];
+  int l;
+  
+  if (ssid_file) {
+    ssid_file.seek(0);
+    while (ssid_file.available()) {
+      l = ssid_file.read(ssid_buf, 128);
+      delay(3000);
+    }
+    ssid = ssid_buf;
+    ssid = ssid.substring(0, l);
+  }
+
+  if (pass_file) {
+    pass_file.seek(0);
+    while (pass_file.available()) {
+      l = pass_file.read(pass_buf, 128);
+      delay(3000);
+    }
+    pass = pass_buf;
+    pass= pass.substring(0, l);
+  }
+}
+
 void WifiNinaProvisioning::print_ap_status() {
   Serial.print("  SSID: ");
   Serial.println(WiFi.SSID());
