@@ -2,6 +2,7 @@ WifiNinaProvisioning	KEYWORD1
 begin	KEYWORD2
 get_ssid	KEYWORD2
 get_pass	KEYWORD2
+get_auth_key	KEYWORD2
 init	KEYWORD2
 scan_networks	KEYWORD2
 create_ap	KEYWORD2
