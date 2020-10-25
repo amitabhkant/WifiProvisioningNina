@@ -137,11 +137,10 @@ void WifiNinaProvisioning::print_html_networks(WiFiClient client) {
   client.println();
 
   // the content of the HTTP response follows the header:
-  client.print("<h2>Select the network you want to connect to</h2>");
+  client.print("<h2>Specify Network & Credentials</h2>");
   client.print("<form action=\"/connect\" method=\"get\">");
-  client.print("<label for=\"networks\">Networks:</label>");
-  client.print("<select name=\"networks\" id=\"networks\">");
-  //client.print("<option value=\"\"></option>");
+  client.print("<label for=\"network\">Network:</label>");
+  client.print("<select name=\"network\" id=\"network\">");
   for (int i = 0; i < MAX_NETWORKS; i++) {
     if (networks[i] == "") {
       break;
@@ -172,7 +171,7 @@ void WifiNinaProvisioning::print_html_connecting(WiFiClient client) {
 }
 
 void WifiNinaProvisioning::get_network_credetials(String request) {
-  // GET /connect?networks=pogui&password=pibedeoro&auth_key=ewqfvdsa HTTP/1.1
+  // GET /connect?network=pogui&password=pibedeoro&auth_key=ewqfvdsa HTTP/1.1
   request = request.substring(0, request.indexOf("\n")); // Get first line of request
   request = request.substring(13, request.length() - 9); // Trim
   int         l = request.length() + 1;
@@ -181,7 +180,7 @@ void WifiNinaProvisioning::get_network_credetials(String request) {
   request.toCharArray(s, l);
   MatchState ms(s);
   
-  ms.Match("^networks=(.-)&password=(.-)&auth_key=(.*)$");
+  ms.Match("^network=(.-)&password=(.-)&auth_key=(.*)$");
 
   char cap[128];
   ms.GetCapture(cap, 0);
