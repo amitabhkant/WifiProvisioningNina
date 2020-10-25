@@ -31,6 +31,10 @@ String WifiNinaProvisioning::get_pass() {
   return pass;
 }
 
+String WifiNinaProvisioning::get_auth_key() {
+  return auth_key;
+}
+
 void WifiNinaProvisioning::begin(bool connect) {
   scan_networks();
   Serial.println("");
@@ -137,7 +141,7 @@ void WifiNinaProvisioning::print_html_networks(WiFiClient client) {
   client.print("<form action=\"/connect\" method=\"get\">");
   client.print("<label for=\"networks\">Networks:</label>");
   client.print("<select name=\"networks\" id=\"networks\">");
-  client.print("<option value=\"\"></option>");
+  //client.print("<option value=\"\"></option>");
   for (int i = 0; i < MAX_NETWORKS; i++) {
     if (networks[i] == "") {
       break;
@@ -145,9 +149,14 @@ void WifiNinaProvisioning::print_html_networks(WiFiClient client) {
     client.print("<option value=\"" + networks[i] + "\">" + networks[i] + "</option>");
   }
   client.print("</select><br><br>");
+  
   client.print("<label for=\"password\">Password:</label>");
   client.print("<input type=\"text\" id=\"password\" name=\"password\"><br><br>");
-  client.print(" <input type=\"submit\" value=\"Connect\">");
+  
+  client.print("<label for=\"auth_key\">Auth/API Key:</label>");
+  client.print("<input type=\"text\" id=\"auth_key\" name=\"auth_key\"><br><br>");
+  
+  client.print("<input type=\"submit\" value=\"Connect\">");
   client.print("</form>");
 
   // The HTTP response ends with another blank line:
@@ -163,33 +172,37 @@ void WifiNinaProvisioning::print_html_connecting(WiFiClient client) {
 }
 
 void WifiNinaProvisioning::get_network_credetials(String request) {
-  // GET /connect?networks=pogui&password=pibedeoro HTTP/1.1
-  // Get first line of request and trim
-  String s = request.substring(0, request.indexOf("\n"));
-  s = s.substring(13, s.length() - 9);
+  // GET /connect?networks=pogui&password=pibedeoro&auth_key=ewqfvdsa HTTP/1.1
+  request = request.substring(0, request.indexOf("\n")); // Get first line of request
+  request = request.substring(13, request.length() - 9); // Trim
+  int         l = request.length() + 1;
+  char        s[l];
+  
+  request.toCharArray(s, l);
+  MatchState ms(s);
+  
+  ms.Match("^networks=(.-)&password=(.-)&auth_key=(.*)$");
 
-  // Get SSID
-  int start_c = s.indexOf("=");
-  int end_c = s.indexOf("&");
-  String _ssid = s.substring(start_c + 1, end_c);
-
-  //Get Password
-  s = s.substring(end_c + 1, s.length());
-  String _pass = s.substring(s.indexOf("=") + 1, s.length());
-
-  Serial.println("  Received wifi credentials:");
-  Serial.println("  - SSID: " + _ssid);
-  Serial.println("  - PASS: " + _pass);
-
-  ssid = _ssid;
-  pass = _pass;
+  char cap[128];
+  ms.GetCapture(cap, 0);
+  ssid = cap;
+  
+  ms.GetCapture(cap, 1);
+  pass = cap;
+  
+  ms.GetCapture(cap, 2);
+  auth_key = cap;
+  
+  Serial.println("  - SSID: " + ssid);
+  Serial.println("  - PASS: " + pass);
+  Serial.println("  - AUTH KEY: " + auth_key);
 }
 
 void WifiNinaProvisioning::connect_to_network() {
   Serial.println("Connecting to selected network...");
 
   while (status != WL_CONNECTED) {
-    Serial.print("  Attempting to connect to WPA SSID: ");
+    Serial.print("  Attempting to connect to SSID: ");
     Serial.println(ssid);
     status = WiFi.begin(ssid.c_str(), pass.c_str());
     delay(DELAY_CONNECTION_ATTEMPTS);
@@ -200,7 +213,7 @@ void WifiNinaProvisioning::connect_to_network() {
 void WifiNinaProvisioning::store_credentials() {
   WiFiStorageFile ssid_file = WiFiStorage.open(SSID_FILE);
   WiFiStorageFile pass_file = WiFiStorage.open(PASS_FILE);
-  
+  WiFiStorageFile auth_key_file = WiFiStorage.open(AUTH_KEY_FILE);
     
   if (ssid_file) {
     ssid_file.erase();
@@ -210,35 +223,50 @@ void WifiNinaProvisioning::store_credentials() {
     pass_file.erase();
   }
 
+  if (auth_key_file) {
+    auth_key_file.erase();
+  }
+
   ssid_file.write(ssid.c_str(), ssid.length());
   pass_file.write(pass.c_str(), pass.length());
+  auth_key_file.write(auth_key.c_str(), auth_key.length());
 }
 
 void WifiNinaProvisioning::retrieve_credentials() {
   WiFiStorageFile ssid_file = WiFiStorage.open(SSID_FILE);
   WiFiStorageFile pass_file = WiFiStorage.open(PASS_FILE);
-  char ssid_buf[128];
-  char pass_buf[128];
+  WiFiStorageFile auth_key_file = WiFiStorage.open(AUTH_KEY_FILE);
+  char buf[128];
   int l;
   
   if (ssid_file) {
     ssid_file.seek(0);
     while (ssid_file.available()) {
-      l = ssid_file.read(ssid_buf, 128);
+      l = ssid_file.read(buf, 128);
       delay(3000);
     }
-    ssid = ssid_buf;
+    ssid = buf;
     ssid = ssid.substring(0, l);
   }
 
   if (pass_file) {
     pass_file.seek(0);
     while (pass_file.available()) {
-      l = pass_file.read(pass_buf, 128);
+      l = pass_file.read(buf, 128);
       delay(3000);
     }
-    pass = pass_buf;
+    pass = buf;
     pass= pass.substring(0, l);
+  }
+
+  if (auth_key_file) {
+    auth_key_file.seek(0);
+    while (auth_key_file.available()) {
+      l = auth_key_file.read(buf, 128);
+      delay(3000);
+    }
+    auth_key = buf;
+    auth_key= auth_key.substring(0, l);
   }
 }
 

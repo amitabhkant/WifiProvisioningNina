@@ -2,6 +2,7 @@
 #define _WIFI_NINA_PROVISIONING_
 
 #include <WiFiNINA.h>
+#include <Regexp.h>
 
 #define DEFAULT_SSID              "arduino_ap"
 #define DEFAULT_PASS              "12345678"
@@ -11,6 +12,7 @@
 #define DELAY_CONNECTION_ATTEMPTS 10000
 #define SSID_FILE                 "/fs/ssid"
 #define PASS_FILE                 "/fs/pass"
+#define AUTH_KEY_FILE             "/fs/auth_key"
 
 class WifiNinaProvisioning {
   private:
@@ -18,6 +20,7 @@ class WifiNinaProvisioning {
     String      ap_pass;
     String      ssid;
     String      pass;
+    String      auth_key;
     int         status;
     WiFiServer  *server;
     String      networks[MAX_NETWORKS];
@@ -28,6 +31,7 @@ class WifiNinaProvisioning {
     void        begin(bool connect);
     String      get_ssid();
     String      get_pass();
+    String      get_auth_key();
     void        store_credentials();
     void        retrieve_credentials();
 
