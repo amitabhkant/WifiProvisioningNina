@@ -180,7 +180,7 @@ void WifiNinaProvisioning::get_network_credetials(String request) {
   request.toCharArray(s, l);
   MatchState ms(s);
   
-  ms.Match("^network=(.-)&password=(.-)&auth_key=(.*)$");
+  ms.Match("^network=(.-)&password=(.-)&auth_key=(.-)$");
 
   char cap[128];
   ms.GetCapture(cap, 0);
