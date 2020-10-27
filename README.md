@@ -49,7 +49,7 @@ If you do not want the workflow to connect to the selected network, use `wp.begi
 
 This is particularly useful if you want to handle the connection yourself or if you want to delegate it to an IoT library.
 
-## Persistent Credential Storage
+## Persistent Credentials Storage
 
 The credentials provided by the user can be saved to WifiNina's permanent storage to avoid provisioning at each reboot or reset. After the initial provisioning use `store_credentials()` so save credential to the permanent storage and `retrieve_credentials()` to retrieve them from storage. Then, use the `get_ssid()`, `get_pass()` and `get_auth_key()`accessors to access the retrieved credentials.
 
