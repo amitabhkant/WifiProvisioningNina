@@ -53,6 +53,8 @@ This is particularly useful if you want to handle the connection yourself or if 
 
 The credentials provided by the user can be saved to WifiNina's permanent storage to avoid provisioning at each reboot or reset. After the initial provisioning use `store_credentials()` so save credential to the permanent storage and `retrieve_credentials()` to retrieve them from storage. Then, use the `get_ssid()`, `get_pass()` and `get_auth_key()`accessors to access the retrieved credentials.
 
+You can also erase stored credentials by calling the `erase_credentials()` member function.
+
 ## Examples
 
 See the _basic_ example sketch for a complete demo of the library.

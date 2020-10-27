@@ -34,6 +34,7 @@ class WifiNinaProvisioning {
     String      get_auth_key();
     void        store_credentials();
     void        retrieve_credentials();
+    void        erase_credentials();
 
   private:
     void        init();

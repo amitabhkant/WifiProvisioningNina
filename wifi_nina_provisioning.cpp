@@ -148,13 +148,13 @@ void WifiNinaProvisioning::print_html_networks(WiFiClient client) {
     client.print("<option value=\"" + networks[i] + "\">" + networks[i] + "</option>");
   }
   client.print("</select><br><br>");
-  
+
   client.print("<label for=\"password\">Password:</label>");
   client.print("<input type=\"text\" id=\"password\" name=\"password\"><br><br>");
-  
+
   client.print("<label for=\"auth_key\">Auth/API Key:</label>");
   client.print("<input type=\"text\" id=\"auth_key\" name=\"auth_key\"><br><br>");
-  
+
   client.print("<input type=\"submit\" value=\"Connect\">");
   client.print("</form>");
 
@@ -174,24 +174,24 @@ void WifiNinaProvisioning::get_network_credetials(String request) {
   // GET /connect?network=pogui&password=pibedeoro&auth_key=ewqfvdsa HTTP/1.1
   request = request.substring(0, request.indexOf("\n")); // Get first line of request
   request = request.substring(13, request.length() - 9); // Trim
-  int         l = request.length() + 1;
-  char        s[l];
-  
+  int   l = request.length() + 1;
+  char  s[l];
+
   request.toCharArray(s, l);
   MatchState ms(s);
-  
+
   ms.Match("^network=(.-)&password=(.-)&auth_key=(.-)$");
 
   char cap[128];
   ms.GetCapture(cap, 0);
   ssid = cap;
-  
+
   ms.GetCapture(cap, 1);
   pass = cap;
-  
+
   ms.GetCapture(cap, 2);
   auth_key = cap;
-  
+
   Serial.println("  - SSID: " + ssid);
   Serial.println("  - PASS: " + pass);
   Serial.println("  - AUTH KEY: " + auth_key);
@@ -213,7 +213,7 @@ void WifiNinaProvisioning::store_credentials() {
   WiFiStorageFile ssid_file = WiFiStorage.open(SSID_FILE);
   WiFiStorageFile pass_file = WiFiStorage.open(PASS_FILE);
   WiFiStorageFile auth_key_file = WiFiStorage.open(AUTH_KEY_FILE);
-    
+
   if (ssid_file) {
     ssid_file.erase();
   }
@@ -231,13 +231,34 @@ void WifiNinaProvisioning::store_credentials() {
   auth_key_file.write(auth_key.c_str(), auth_key.length());
 }
 
+void WifiNinaProvisioning::erase_credentials() {
+  WiFiStorageFile ssid_file = WiFiStorage.open(SSID_FILE);
+  WiFiStorageFile pass_file = WiFiStorage.open(PASS_FILE);
+  WiFiStorageFile auth_key_file = WiFiStorage.open(AUTH_KEY_FILE);
+
+  if (ssid_file) {
+    ssid_file.erase();
+  }
+  ssid = "";
+
+  if (pass_file) {
+    pass_file.erase();
+  }
+  pass = "";
+
+  if (auth_key_file) {
+    auth_key_file.erase();
+  }
+  auth_key = "";
+}
+
 void WifiNinaProvisioning::retrieve_credentials() {
   WiFiStorageFile ssid_file = WiFiStorage.open(SSID_FILE);
   WiFiStorageFile pass_file = WiFiStorage.open(PASS_FILE);
   WiFiStorageFile auth_key_file = WiFiStorage.open(AUTH_KEY_FILE);
   char buf[128];
   int l;
-  
+
   if (ssid_file) {
     ssid_file.seek(0);
     while (ssid_file.available()) {
@@ -255,7 +276,7 @@ void WifiNinaProvisioning::retrieve_credentials() {
       delay(3000);
     }
     pass = buf;
-    pass= pass.substring(0, l);
+    pass = pass.substring(0, l);
   }
 
   if (auth_key_file) {
@@ -265,7 +286,7 @@ void WifiNinaProvisioning::retrieve_credentials() {
       delay(3000);
     }
     auth_key = buf;
-    auth_key= auth_key.substring(0, l);
+    auth_key = auth_key.substring(0, l);
   }
 }
 
